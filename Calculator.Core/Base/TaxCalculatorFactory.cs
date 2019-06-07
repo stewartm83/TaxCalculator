@@ -2,27 +2,22 @@ using System;
 using Calculator.Core;
 using System.Collections.Generic;
 
-namespace Calculator.Web.Infrastructure
+namespace Calculator.Core
 {
     public class TaxCalculatorFactory : ITaxCalculatorFactory
-    {
-        public Dictionary<string, TaxStrategyType> PostalCodeStrategyMap { get; set; }
+    {       
         public ITaxStrategy GetTaxStrategy(TaxStrategyType strategy)
         {
             switch (strategy)
             {
                 case TaxStrategyType.FLAT_VALUE:
-                    return new FlatValueStrategy();
-                    break;
+                    return new FlatValueStrategy();                 
                 case TaxStrategyType.PROGRESSIVE:
-                    return new ProgressiveStrategy();
-                    break;
+                    return new ProgressiveStrategy();              
                 case TaxStrategyType.FLAT_RATE:
-                    return new FlatRateStrategy();
-                    break;
+                    return new FlatRateStrategy();             
                 default:
-                    return new FlatRateStrategy();
-                    break;
+                    return new FlatRateStrategy();           
             }      
         }
     }

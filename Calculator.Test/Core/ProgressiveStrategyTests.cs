@@ -1,8 +1,10 @@
 using NUnit.Framework;
+using Calculator.Core;
 
 namespace Tests
 {
-    public class Tests
+    [TestFixture]
+    public class ProgressiveStrategyTests
     {
         [SetUp]
         public void Setup()

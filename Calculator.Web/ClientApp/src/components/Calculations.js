@@ -6,9 +6,7 @@ export class Calculations extends Component {
 
     constructor(props) {
         super(props);
-        this.state = { calculations: [], loading: true };
-
-        
+        this.state = { calculations: [], loading: true };      
     }
 
     loadCalculationsFromServer = () => {
@@ -20,7 +18,7 @@ export class Calculations extends Component {
     };
 
     componentDidMount() {
-        window.setInterval(this.loadCalculationsFromServer, this.props.pollInterval);
+        window.setInterval(this.loadCalculationsFromServer, 5000);
     }
 
     static renderCalculations(calculations) {

@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
-using Calculator.Web.Infrastructure;
+using Calculator.Core;
 using Calculator.Web.Models;
 using Calculator.Web.ViewModels;
 

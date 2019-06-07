@@ -5,7 +5,7 @@ export class Calculator extends Component {
     static displayName = Calculator.name;
     constructor(props) {
         super(props);
-        state = {
+        this.state = {
             postalCode: '',
             annualSalary: ''
         };
@@ -21,31 +21,53 @@ export class Calculator extends Component {
 
     handleSubmit = e => {
         e.preventDefault();
-        var postalCode = this.state.postalCode.trim();
-        var annualSalary = this.state.annualSalary.trim();
+        const postalCode = this.state.postalCode.trim();
+        const annualSalary = this.state.annualSalary.trim();
         if (!postalCode || !annualSalary) {
             return;
         }
-        this.props.onCommentSubmit({ postalCode: postalCode, annualSalary: annualSalary });
-        this.setState({ postalCode: '', annualSalary: '' });
+
+        const url = 'api/Calculations';      
+
+        fetch(url, {
+            method: 'POST', 
+            body: JSON.stringify({ postalCode: postalCode, annualSalary: annualSalary }), 
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        }).then(res => res.json())
+            .then(response => console.log('Success:', JSON.stringify(response)))
+            .catch(error => console.error('Error:', error));
+
+        
+        this.setState({ postalCode: '', annualSalary: '' });       
     };
 
     render() {
         return (
             <form onSubmit={this.handleSubmit}>
-                <input
-                    type="text"
-                    placeholder="Postal Code"
-                    value={this.state.postalCode}
-                    onChange={this.handlePostalCodeChange}
-                />
-                <input
-                    type="text"
-                    placeholder="Annual Salary"
-                    value={this.state.annualSalary}
-                    onChange={this.handleAnnualSalaryChange}
-                />
-                <input type="submit" value="Post" />
+                <div className="form-group row">
+                    <label for="postal-code">Postal Code</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="postal-code"
+                        value={this.state.postalCode}
+                        onChange={this.handlePostalCodeChange}
+                    />
+                </div>
+
+                <div className="form-group row">
+                    <label for="salary" >Annual Salary</label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        id="salary"
+                        value={this.state.annualSalary}
+                        onChange={this.handleAnnualSalaryChange}
+                    />
+                </div>
+                <input type="submit" class="btn btn-primary" value="Calculate" />
             </form>
         );
     }

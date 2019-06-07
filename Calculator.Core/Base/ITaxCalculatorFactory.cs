@@ -2,7 +2,7 @@ using System;
 using Calculator.Core;
 using System.Collections.Generic;
 
-namespace Calculator.Web.Infrastructure
+namespace Calculator.Core
 {
     public interface ITaxCalculatorFactory
     {
