@@ -5,8 +5,10 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.SpaServices.ReactDevelopmentServer;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Calculator.Web.Models;
 using Microsoft.EntityFrameworkCore;
+using Calculator.Web.Models;
+using Calculator.Core;
+
 
 namespace Calculator.Web
 {
@@ -14,7 +16,6 @@ namespace Calculator.Web
     {
         public Startup(IConfiguration configuration)
         {
-            //  LogManager.LoadConfiguration(String.Concat(Directory.GetCurrentDirectory(), "/nlog.config"));
             Configuration = configuration;
         }
 
@@ -25,21 +26,17 @@ namespace Calculator.Web
         {
             services.AddDbContext<CalculatorContext>(options => options.UseSqlite(Configuration.GetConnectionString("DefaultConnection")));
             services.AddCors(options =>
-         {
-             options.AddPolicy("CorsPolicy",
-                 builder =>
                  {
-                     builder
-                         .AllowAnyHeader()
-                         .AllowAnyMethod()
-                         .AllowCredentials()
-                         .AllowAnyOrigin();
+                     options.AddPolicy("CorsPolicy",
+                         builder =>
+                         {
+                             builder.AllowAnyHeader()
+                                    .AllowAnyMethod()
+                                    .AllowAnyOrigin();
+                         });
                  });
-         });
 
-            //  services.AddSingleton<ILoggerManager, LoggerManager>();
-
-            // services.AddScoped<IRepositoryWrapper, RepositoryWrapper>();
+            services.AddScoped<ITaxCalculatorFactory, TaxCalculatorFactory>();
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddJsonOptions(options =>
@@ -68,27 +65,20 @@ namespace Calculator.Web
                 // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
                 app.UseHsts();
             }
-            
+
             app.UseCors("CorsPolicy");
-            app.UseHttpsRedirection();
+            // app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
-
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller}/{action=Index}/{id?}");
-            });
-
+            app.UseMvc();
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
 
                 if (env.IsDevelopment())
                 {
-                    // spa.UseReactDevelopmentServer(npmScript: "start");
-                    spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
+                    spa.UseReactDevelopmentServer(npmScript: "start");
+                    // spa.UseProxyToSpaDevelopmentServer("http://localhost:3000");
                 }
             });
         }

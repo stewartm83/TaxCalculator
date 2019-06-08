@@ -6,7 +6,6 @@ namespace Tests
     [TestFixture]
     public class FlatRateStrategyTests
     {
-
         private readonly ITaxStrategy flatRateStrategy;
         public FlatRateStrategyTests()
         {
@@ -28,20 +27,15 @@ namespace Tests
             Assert.AreEqual(expectedTax, actualTax, "Expected tax is not equal to calculated tax");
         }
 
-         [TestCase(-12000)]
-        [TestCase(0)]     
+        [TestCase(-12000)]
+        [TestCase(0)]
         public void InvalidSalaryTest(int annualSalary)
         {
-            // Given
-            // var annualSalary = 10000;
-            var expectedTax = 0;
-            
             // When 
             var actualTax = flatRateStrategy.CalculateTax(annualSalary);
 
             // Then
-            Assert.IsTrue(actualTax > 0, "Actual calculated tax should be greater than zero");
-            Assert.AreEqual(expectedTax, actualTax, "Expected tax is not equal to calculated tax");
+            Assert.IsFalse(actualTax > 0, "Actual calculated tax should be greater than zero");
         }
     }
 }

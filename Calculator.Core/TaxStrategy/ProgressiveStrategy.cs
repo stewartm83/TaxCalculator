@@ -46,8 +46,11 @@ namespace Calculator.Core
         }
         public decimal CalculateTax(decimal taxableIncome)
         {
+            if (taxableIncome <= 0)
+                return 0;
+
             var fullPayTax =
-                 _taxBrackets.Where(t => t.High < taxableIncome)
+                 _taxBrackets.Where(t => t.High <= taxableIncome)
                      .Select(t => t)
                      .ToArray()
                      .Sum(taxBracket => (taxBracket.High - taxBracket.Low) * taxBracket.Rate);

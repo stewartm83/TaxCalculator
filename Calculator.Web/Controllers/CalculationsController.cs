@@ -20,7 +20,8 @@ namespace Calculator.Web.Controllers
 
         // TODO: Move mapping to config file
         private Dictionary<string, TaxStrategyType> PostalCodeStrategyMap
-        = new Dictionary<string, TaxStrategyType>(){
+        = new Dictionary<string, TaxStrategyType>()
+        {
             {"7441", TaxStrategyType.PROGRESSIVE},
             {"A100", TaxStrategyType.FLAT_VALUE},
             {"7000", TaxStrategyType.FLAT_RATE},
@@ -36,8 +37,7 @@ namespace Calculator.Web.Controllers
             _logger = logger;
         }
 
-        [Route("[action]")]
-        [ResponseCache(Location = ResponseCacheLocation.None, NoStore = true)]
+        [HttpGet]
         public async Task<ActionResult<IEnumerable<Calculation>>> Calculations()
         {
             var calculations = await _context.Calculations.ToListAsync();
@@ -45,7 +45,7 @@ namespace Calculator.Web.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Calculation>> GetGame(int id)
+        public async Task<ActionResult<Calculation>> GetCalculation(int id)
         {
             var calculation = await _context.Calculations.FindAsync(id);
             if (calculation == null)

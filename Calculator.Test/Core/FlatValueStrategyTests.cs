@@ -44,5 +44,18 @@ namespace Tests
             Assert.IsTrue(actualTax > 0, "Actual calculated tax should be greater than zero");
             Assert.AreEqual(expectedTax, actualTax, "Expected tax is not equal to calculated tax");
         }
+
+        [TestCase(-12000)]
+        [TestCase(0)]
+        public void InvalidSalaryTest(int annualSalary)
+        {
+            // Given      
+
+            // When 
+            var actualTax = flatValueStrategy.CalculateTax(annualSalary);
+
+            // Then
+            Assert.IsFalse(actualTax > 0, "Actual calculated tax should be greater than zero");
+        }
     }
 }

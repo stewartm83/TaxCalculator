@@ -1,22 +1,24 @@
 import React, { Component } from 'react';
 
 export class Calculator extends Component {
-
     static displayName = Calculator.name;
+
     constructor(props) {
         super(props);
         this.state = {
             postalCode: '',
-            annualSalary: ''
+            annualSalary: '',
+            taxResult: {},
+            editing: true
         };
     }
 
     handlePostalCodeChange = e => {
-        this.setState({ author: e.target.value });
+        this.setState({ postalCode: e.target.value, editing: true });
     };
 
     handleAnnualSalaryChange = e => {
-        this.setState({ text: e.target.value });
+        this.setState({ annualSalary: e.target.value, editing: true });
     };
 
     handleSubmit = e => {
@@ -27,48 +29,88 @@ export class Calculator extends Component {
             return;
         }
 
-        const url = 'api/Calculations';      
-
-        fetch(url, {
-            method: 'POST', 
-            body: JSON.stringify({ postalCode: postalCode, annualSalary: annualSalary }), 
+        fetch('http://localhost:5000/api/Calculations/calculate', {
+            method: 'POST',
+            body: JSON.stringify({ postalCode: postalCode, annualSalary: annualSalary }),
             headers: {
                 'Content-Type': 'application/json'
             }
         }).then(res => res.json())
-            .then(response => console.log('Success:', JSON.stringify(response)))
-            .catch(error => console.error('Error:', error));
+            .then(response => {
+                this.setState({ taxResult: response, editing: false });
+            }).catch(error => console.error('Error:', error));
 
-        
-        this.setState({ postalCode: '', annualSalary: '' });       
+
+        this.setState({ postalCode: '', annualSalary: '' });
     };
 
     render() {
         return (
-            <form onSubmit={this.handleSubmit}>
-                <div className="form-group row">
-                    <label for="postal-code">Postal Code</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="postal-code"
-                        value={this.state.postalCode}
-                        onChange={this.handlePostalCodeChange}
-                    />
-                </div>
+            <div className="card ">
+                <div className="card-header text-center">Calculate</div>
+                <div className="card-body row">
+                    <form className="offset-3 col-8" onSubmit={this.handleSubmit}>
+                        <div className="form-group row">
+                            <label className="col-4">Postal Code</label>
+                            <input
+                                type="text"
+                                className="form-control col-6"
+                                id="postal-code"
+                                value={this.state.postalCode}
+                                onChange={this.handlePostalCodeChange}
+                            />
+                        </div>
 
-                <div className="form-group row">
-                    <label for="salary" >Annual Salary</label>
-                    <input
-                        type="text"
-                        className="form-control"
-                        id="salary"
-                        value={this.state.annualSalary}
-                        onChange={this.handleAnnualSalaryChange}
-                    />
+                        <div className="form-group row">
+                            <label className="col-4">Annual Salary</label>
+                            <input
+                                type="text"
+                                className="form-control col-6"
+                                id="salary"
+                                value={this.state.annualSalary}
+                                onChange={this.handleAnnualSalaryChange}
+                            />
+                        </div>
+                        <div className="row">
+                            <input type="submit" className="btn btn-primary offset-4 col-6 btn-block" value="Calculate" />
+                        </div>
+                    </form>
+
+                    {this.state.taxResult.id > 0 && !this.editing &&
+                        <div className="offset-3 col-8">
+                            <h3>Result</h3>
+                            <div id="results-div">
+                                <div className="form-group row">
+                                    <label className="col-4">Annual Salary</label>
+                                    <div className="col-8">
+                                        <input type="text" readOnly className="form-control-plaintext" value={this.state.taxResult.annualSalary} />
+                                    </div>
+                                </div>
+                                <div className="form-group row">
+                                    <label className="col-4">Tax Calculated</label>
+                                    <div className="col-8">
+                                        <input type="text" readOnly className="form-control-plaintext" value={this.state.taxResult.calculatedTax} />
+                                    </div>
+                                </div>
+                                <div className="form-group row">
+                                    <label className="col-4">Postal Code</label>
+                                    <div className="col-8">
+                                        <input type="text" readOnly className="form-control-plaintext" value={this.state.taxResult.postalCode} />
+                                    </div>
+                                </div>
+                                <div className="form-group row">
+                                    <label className="col-4">Date Calculated</label>
+                                    <div className="col-8">
+                                        <input type="text" readOnly className="form-control-plaintext" value={this.state.taxResult.createdOn} />
+                                    </div>
+                                </div>
+
+                            </div>
+                        </div>
+                    }
                 </div>
-                <input type="submit" class="btn btn-primary" value="Calculate" />
-            </form>
+            </div>
+
         );
     }
 }
