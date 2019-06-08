@@ -7,7 +7,6 @@ using Microsoft.Extensions.Logging;
 using Microsoft.EntityFrameworkCore;
 using Calculator.Core;
 using Calculator.Web.Models;
-using Calculator.Web.ViewModels;
 
 namespace Calculator.Web.Controllers
 {
@@ -67,8 +66,7 @@ namespace Calculator.Web.Controllers
                     _logger.LogError("Invalid calculation model object from request");
                     return BadRequest("Invalid model object");
                 }
-
-
+                
                 if (!PostalCodeStrategyMap.ContainsKey(calculationVm.PostalCode))
                 {
                     _logger.LogError("No tax strategy configured for the given postal code");

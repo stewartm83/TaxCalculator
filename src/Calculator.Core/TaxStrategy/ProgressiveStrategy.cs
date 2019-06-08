@@ -49,16 +49,14 @@ namespace Calculator.Core
             if (taxableIncome <= 0)
                 return 0;
 
-            var fullPayTax =
-                 _taxBrackets.Where(t => t.High <= taxableIncome)
-                     .Select(t => t)
-                     .ToArray()
-                     .Sum(taxBracket => (taxBracket.High - taxBracket.Low) * taxBracket.Rate);
+            var fullPayTax = _taxBrackets.Where(t => t.High <= taxableIncome)
+                              .Select(t => t)
+                              .ToArray().Sum(taxBracket => (taxBracket.High - taxBracket.Low) * taxBracket.Rate);
 
             var partialTax =
-                _taxBrackets.Where(t => t.Low <= taxableIncome && t.High >= taxableIncome)
+                _taxBrackets.Where(t => t.Low <= taxableIncome && t.High > taxableIncome)
                     .Select(t => (taxableIncome - t.Low) * t.Rate)
-                    .Single();
+                    .FirstOrDefault();
 
 
             return fullPayTax + partialTax;
